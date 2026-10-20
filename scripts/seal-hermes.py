@@ -15,6 +15,16 @@ python = home / "tools" / tools["packages"]["python"]["entry"] / "bin/python3"
 assert venv.joinpath("pyvenv.cfg").is_file(), "Missing dependency environment"
 assert python.is_file(), "Missing bundled Python"
 (venv.parent / ".lease-managed").unlink(missing_ok=True)
+pm_state = home / "installs" / key / "pm-runtime"
+selected = json.loads((pm_state / "selected.json").read_text())
+runtime = home / "pm-runtime"
+shutil.move(str(pm_state / selected["generation"]), runtime)
+(runtime / ".lease-managed").unlink(missing_ok=True)
+site = next(runtime.glob("lib/python*/site-packages"))
+(runtime / "pm-runtime.json").write_text(json.dumps({
+    "python": os.path.relpath(python, runtime),
+    "sitePackages": str(site.relative_to(runtime)),
+}) + "\n")
 launcher = repo / ".hermes/bin/hermes"
 manifest = {
     "repo": "hermes-agent",
