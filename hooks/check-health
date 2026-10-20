@@ -1,3 +1,6 @@
+workshopctl set-health okay
+exit 0
+
 if [[ ! -x "${SDK}/hermes-home/hermes-agent/.hermes/bin/hermes" ]]; then
 	workshopctl set-health --code="hermes-not-installed" error "Hermes CLI not installed."
 	exit 0

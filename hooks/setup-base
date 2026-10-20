@@ -1,9 +1,19 @@
 set -e
 
+mkdir -p /usr/local/bin
+
+cat <<'EOF' >/usr/local/bin/hermes
+#!/bin/sh
+export HERMES_HOME="${HERMES_HOME:-/home/workshop/.hermes}"
+export HERMES_RUNTIME_DIR="/var/lib/workshop/sdk/hermes-sdk/hermes-home/tools"
+exec /var/lib/workshop/sdk/hermes-sdk/hermes-home/hermes-agent/.hermes/bin/hermes "$@"
+EOF
+chmod 755 /usr/local/bin/hermes
+
 cat <<EOF >/etc/profile.d/hermes.sh
-export PATH="${SDK}/hermes-home/hermes-agent/.hermes/bin:\$PATH"
+export PATH="/usr/local/bin:\$PATH"
 export HERMES_HOME="/home/workshop/.hermes"
-export HERMES_RUNTIME_DIR="${SDK}/hermes-home/tools"
+export HERMES_RUNTIME_DIR="/var/lib/workshop/sdk/hermes-sdk/hermes-home/tools"
 EOF
 
 export DEBIAN_FRONTEND=noninteractive

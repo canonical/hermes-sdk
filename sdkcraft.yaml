@@ -30,12 +30,18 @@ parts:
     source: .
     build-packages:
       - git
+      - python3
     override-pull: |
       VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
       craftctl set version="$VERSION"
     override-build: |
       VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
-      curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --hermes-home "$CRAFT_PART_INSTALL/hermes-home" --branch "release/$VERSION" --skip-computer-use
+      export HERMES_HOME="$CRAFT_PART_INSTALL/hermes-home"
+      export HERMES_RUNTIME_DIR="$HERMES_HOME/tools"
+      curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --hermes-home "$HERMES_HOME" --dir "$HERMES_HOME/hermes-agent" --branch "release/$VERSION" --skip-computer-use
+      python3 "$CRAFT_PROJECT_DIR/scripts/check-hermes-compatibility.py" || exit 1
+      python3 "$CRAFT_PROJECT_DIR/scripts/seal-hermes.py"
+      chmod -R a+rX "$HERMES_HOME"
 
   workshop-prompt:
     plugin: dump
