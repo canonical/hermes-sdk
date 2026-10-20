@@ -1,0 +1,16 @@
+if [[ ! -x "${SDK}/hermes-home/hermes-agent/.hermes/bin/hermes" ]]; then
+	workshopctl set-health --code="hermes-not-installed" error "Hermes CLI not installed."
+	exit 0
+fi
+
+if ! sudo -u workshop --login which hermes >/dev/null 2>&1; then
+	workshopctl set-health --code="hermes-not-in-path" error "Hermes CLI not available on the \$PATH."
+	exit 0
+fi
+
+if ! timeout 3 sudo -u workshop --login hermes --version >/dev/null 2>&1; then
+	workshopctl set-health --code="hermes-not-runnable" error "Hermes CLI failed to run."
+	exit 0
+fi
+
+workshopctl set-health okay

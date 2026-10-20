@@ -1,0 +1,4 @@
+name: test-pi
+base: ${BASE}
+sdks:
+  - name: try-pi

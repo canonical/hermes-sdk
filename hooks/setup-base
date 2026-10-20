@@ -1,0 +1,11 @@
+set -e
+
+cat <<EOF >/etc/profile.d/hermes.sh
+export PATH="${SDK}/hermes-home/hermes-agent/.hermes/bin:\$PATH"
+export HERMES_HOME="/home/workshop/.hermes"
+export HERMES_RUNTIME_DIR="${SDK}/hermes-home/tools"
+EOF
+
+export DEBIAN_FRONTEND=noninteractive
+apt-get update
+apt-get install -y --no-install-recommends git curl ripgrep libatomic1

@@ -1,0 +1,43 @@
+name: hermes
+title: Hermes SDK
+adopt-info: hermes
+summary: Hermes Agent - The self-improving AI agent built by Nous Research.
+description: |
+  This SDK provides the Hermes Agent. 
+  The self-improving AI agent built by Nous Research. It's the only agent with a built-in learning loop — it creates skills from experience, improves them during use, nudges itself to persist knowledge, searches its own past conversations, and builds a deepening model of who you are across sessions. 
+license: MIT
+website: https://github.com/NousResearch/hermes-agent
+build-base: ubuntu@24.04
+platforms:
+  # Build each arch natively: npm-include-node downloads node for the build
+  # host, so cross-building would bundle the wrong-arch node. riscv64 is omitted
+  # (pi needs node >=22.19.0 and Node.js publishes no linux-riscv64 binary).
+  amd64:
+    build-on: [amd64]
+    build-for: [amd64]
+  arm64:
+    build-on: [arm64]
+    build-for: [arm64]
+
+plugs:
+  hermes-config:
+    interface: mount
+    workshop-target: /home/workshop/.hermes
+
+parts:
+  hermes:
+    plugin: nil
+    source: .
+    build-packages:
+      - git
+    override-pull: |
+      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
+      craftctl set version="$VERSION"
+    override-build: |
+      VERSION=$(cat "$CRAFT_PROJECT_DIR/VERSION")
+      curl -fsSL https://hermes-agent.nousresearch.com/install.sh | bash -s -- --non-interactive --hermes-home "$CRAFT_PART_INSTALL/hermes-home" --branch "release/$VERSION" --skip-computer-use
+
+  workshop-prompt:
+    plugin: dump
+    source: workshop-prompt.md
+    source-type: file

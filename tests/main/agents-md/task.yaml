@@ -1,0 +1,18 @@
+summary: setup-project installs the workshop prompt as ~/.pi/agent/AGENTS.md
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  # pi loads ~/.pi/agent/AGENTS.md as its global context file on startup.
+  workshop exec -- test -f /home/workshop/.pi/agent/AGENTS.md
+  workshop exec -- head -1 /home/workshop/.pi/agent/AGENTS.md | \
+    MATCH "Workshop Container Environment Instructions"
+
+debug: |
+  workshop exec -- ls -laR /home/workshop/.pi/ || true
+  workshop exec -- cat /home/workshop/.pi/agent/AGENTS.md || true

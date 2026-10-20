@@ -1,0 +1,15 @@
+summary: pi is on $PATH inside the workshop
+
+prepare: |
+  envsubst '${BASE}' <workshop.yaml.in >workshop.yaml
+  workshop launch
+
+restore: |
+  workshop remove || true
+
+execute: |
+  workshop exec -- pi --version
+
+debug: |
+  workshop exec -- bash -lc 'echo PATH=$PATH' || true
+  workshop exec -- bash -lc 'cat /etc/profile.d/pi.sh' || true

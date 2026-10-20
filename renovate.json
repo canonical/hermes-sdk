@@ -1,0 +1,37 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
+  "dependencyDashboard": true,
+  "enabledManagers": ["custom.regex"],
+  "customManagers": [
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^VERSION$/"],
+      "matchStrings": ["(?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "@earendil-works/pi-coding-agent",
+      "datasourceTemplate": "npm",
+      "versioningTemplate": "semver"
+    },
+    {
+      "customType": "regex",
+      "managerFilePatterns": ["/^sdkcraft\\.yaml$/"],
+      "matchStrings": ["npm-node-version: (?<currentValue>[0-9.]+)"],
+      "depNameTemplate": "node",
+      "datasourceTemplate": "node-version"
+    }
+  ],
+  "automerge": true,
+  "platformAutomerge": true,
+  "baseBranchPatterns": ["latest"],
+  "packageRules": [
+    {
+      "matchPackageNames": ["@earendil-works/pi-coding-agent"],
+      "matchBaseBranches": ["latest"]
+    },
+    {
+      "matchPackageNames": ["node"],
+      "matchBaseBranches": ["latest"],
+      "allowedVersions": "/^22\\./"
+    }
+  ]
+}

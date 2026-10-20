@@ -1,0 +1,21 @@
+set -e
+
+export HERMES_HOME="${HERMES_HOME:-/home/workshop/.hermes}"
+mkdir -p "$HERMES_HOME"
+
+for config in .env config.yaml; do
+    if [[ ! -e "$HERMES_HOME/$config" && -f "${SDK}/hermes-home/$config" ]]; then
+        cp "${SDK}/hermes-home/$config" "$HERMES_HOME/$config"
+    fi
+done
+if [[ -f "$HERMES_HOME/.env" ]]; then
+    chmod 600 "$HERMES_HOME/.env"
+fi
+
+SOUL_MD="$HERMES_HOME/SOUL.md"
+if [[ ! -f "$SOUL_MD" ]]; then
+    cp "${SDK}/workshop-prompt.md" "$SOUL_MD"
+elif ! grep -Fq "$(head -1 "${SDK}/workshop-prompt.md")" "$SOUL_MD"; then
+    printf '\n' >> "$SOUL_MD"
+    cat "${SDK}/workshop-prompt.md" >> "$SOUL_MD"
+fi
