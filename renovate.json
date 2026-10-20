@@ -8,16 +8,9 @@
       "customType": "regex",
       "managerFilePatterns": ["/^VERSION$/"],
       "matchStrings": ["(?<currentValue>[0-9.]+)"],
-      "depNameTemplate": "@earendil-works/pi-coding-agent",
-      "datasourceTemplate": "npm",
+      "depNameTemplate": "NousResearch/hermes-agent",
+      "datasourceTemplate": "github-releases",
       "versioningTemplate": "semver"
-    },
-    {
-      "customType": "regex",
-      "managerFilePatterns": ["/^sdkcraft\\.yaml$/"],
-      "matchStrings": ["npm-node-version: (?<currentValue>[0-9.]+)"],
-      "depNameTemplate": "node",
-      "datasourceTemplate": "node-version"
     }
   ],
   "automerge": true,
@@ -25,13 +18,8 @@
   "baseBranchPatterns": ["latest"],
   "packageRules": [
     {
-      "matchPackageNames": ["@earendil-works/pi-coding-agent"],
+      "matchPackageNames": ["NousResearch/hermes-agent"],
       "matchBaseBranches": ["latest"]
-    },
-    {
-      "matchPackageNames": ["node"],
-      "matchBaseBranches": ["latest"],
-      "allowedVersions": "/^22\\./"
     }
   ]
 }
