@@ -14,6 +14,7 @@ tools = json.loads((home / "tools/facts.json").read_text())
 python = home / "tools" / tools["packages"]["python"]["entry"] / "bin/python3"
 assert venv.joinpath("pyvenv.cfg").is_file(), "Missing dependency environment"
 assert python.is_file(), "Missing bundled Python"
+(venv.parent / ".lease-managed").unlink(missing_ok=True)
 launcher = repo / ".hermes/bin/hermes"
 manifest = {
     "repo": "hermes-agent",
