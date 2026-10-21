@@ -1,6 +1,6 @@
-# Pi SDK for Workshop
+# Hermes SDK for Workshop
 
-This SDK provides the Pi Coding Agent for AI-assisted coding within a
+This SDK provides the Hermes Agent for AI-assisted coding within a
 workshop. The agent is sandboxed in the workshop container. Credentials are
 persisted between workshop updates.
 
@@ -12,18 +12,17 @@ A minimal workshop:
 
 ```yaml
 # workshop.yaml
-name: pi-env
+name: hermes-env
 base: ubuntu@24.04
 sdks:
-  - name: pi
+  - name: hermes-sdk
     channel: latest/stable
 
 actions:
-  pi: pi "$@"
-  pi-prompt: pi -p "$@"
+  hermes: hermes "$@"
 ```
 
-This creates a basic Pi environment.
+This creates a basic Hermes environment.
 The agent is sandboxed by the workshop.
 
 ---
@@ -34,10 +33,10 @@ The agent is sandboxed by the workshop.
 
 1. No prerequisite SDKs are required.
 2. Place your project files in your project directory. No special layout is
-   required; Pi works with any codebase.
-3. On launch, the SDK puts `pi` on the `PATH`, installs `fd` and `ripgrep`
-   for pi's search tools, and adds a hint about the workshop environment to
-   `~/.pi/agent/AGENTS.md`. An existing `AGENTS.md` is kept; the hint is
+  required; Hermes works with any codebase.
+3. The SDK puts `hermes` on the `PATH`, installs `git`, `curl`, `ripgrep`,
+  and `libatomic1`, and adds a hint about the workshop environment to
+  `~/.hermes/SOUL.md`. An existing `SOUL.md` is kept; the hint is
    appended once.
 
 ### Start a coding session
@@ -46,29 +45,31 @@ Once the workshop is ready:
 
 ```bash
 workshop shell
-pi
+hermes
 ```
 
-This opens an interactive Pi session inside the workshop. You can ask
-pi to read files, write code, run commands, and navigate your project.
+This opens an interactive Hermes session inside the workshop. Configure your
+model provider and credentials through Hermes before starting your first chat.
+You can ask Hermes to read files, write code, run commands, and navigate your
+project.
 
 ---
 
 ## Plugs (resources this SDK consumes)
 
-### `pi-config`
+### `hermes-config`
 
 - Interface: `mount`
-- Workshop target: `/home/workshop/.pi`
-- Purpose: Preserves Pi coding agent's credentials and settings between workshop updates.
+- Workshop target: `/home/workshop/.hermes`
+- Purpose: Preserves Hermes credentials, settings, and agent state between workshop updates.
   You can also use `workshop remount` to control its contents on the host.
-  To mount your existing `~/.pi` settings into the workshop, stop
+  To mount your existing `~/.hermes` settings into the workshop, stop
   the workshop first, remount, then start it again. The workshop hint is then
-  appended to your host `~/.pi/agent/AGENTS.md` as well:
+  appended to your host `~/.hermes/SOUL.md` as well:
 
   ```bash
   workshop stop <workshop-name>
-  workshop remount <workshop-name>/pi:pi-config ~/.pi
+  workshop remount <workshop-name>/hermes-sdk:hermes-config ~/.hermes
   workshop start <workshop-name>
   ```
 
@@ -80,8 +81,31 @@ This SDK doesn't define any slots.
 
 ## Documentation and guidance
 
-- [Pi documentation](https://pi.dev/docs/latest)
+- [Hermes Agent documentation](https://hermes-agent.nousresearch.com/docs/)
 - [Workshop documentation](https://ubuntu.com/workshop/docs/)
+
+---
+
+## Building and updating
+
+Build the SDK with:
+
+```bash
+sdkcraft pack
+```
+
+The Hermes release is pinned in [VERSION](VERSION). The build bundles Hermes,
+its Python runtime, and its dependencies as a relocatable, externally managed
+installation. No dependency repair is required at startup; updates are delivered
+through the SDK rather than `hermes update`.
+
+Before sealing the installation,
+[the compatibility check](scripts/check-hermes-compatibility.py) verifies
+fingerprints of the upstream files used by
+[the sealing helper](scripts/seal-hermes.py). If a monitored file changes or is
+missing, the build stops with review instructions. Review upstream behavior and
+verify the relocated installation before updating the fingerprints; do not
+refresh them just to bypass the check.
 
 ---
 
@@ -101,7 +125,7 @@ All contributions, including code, documentation updates, and issue reports,
 are welcome!
 
 - Open issues or pull requests on the
-  [official repository](https://github.com/canonical/pi-sdk).
+  [official repository](https://github.com/canonical/hermes-sdk).
 
 ---
 
@@ -118,4 +142,4 @@ This program is distributed in the hope that it will be useful, but WITHOUT ANY
 WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
 PARTICULAR PURPOSE. See the GNU Lesser General Public License for more details.
 
-[Pi Coding Agent](https://pi.dev) is subject to MIT license.
+[Hermes Agent](https://github.com/NousResearch/hermes-agent) is subject to MIT license.

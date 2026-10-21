@@ -5,7 +5,9 @@ from pathlib import Path
 EXPECTED = {
     "hermes_bootstrap.py": "f242036b2d35b92283b9a7e97c7059e537607fc4b02026f657a6d00cb4683f69",
     "pm/environments.py": "ac5a9f09bc622a60aa616880be0906b07bec95bb8ad934924e931aa28dc8b777",
+    "pm/runtime.py": "68d6ae47d2e0143f3cc377e462e3588abbb0e857bbc9f22442a3f66ebe54c478",
     "hermes_cli/_launchers.py": "9cf612547558a28a7840544a44c5f5ab866ee527a05f96000aefdf51cd7fcbcd",
+    "hermes_cli/runtime_state.py": "95927323553bc0b5e62b9a56ae1d45ecf367b22887491ea6c767b48d83e4b805",
     "hermes_cli/steward.py": "d365372909dd2b14d769c8df2972f7b0871e8ce294c7b18707f70e1f310ff8a7",
 }
 
@@ -24,7 +26,7 @@ if changed:
         "Hermes packaging compatibility check failed. Upstream files changed or are unreadable:\n  "
         + "\n  ".join(changed)
         + "\nThe sealing script relies on behavior reviewed against Hermes 0.22.2.\n"
-        "Review sealed-manifest resolution, dependency activation, launcher behavior, and external-update ownership.\n"
+        "Review sealed-manifest resolution, packaged PM runtime discovery, dependency activation, launcher behavior, lease-marker handling, and external-update ownership.\n"
         "Adapt scripts/seal-hermes.py if needed, then verify a relocated, read-only SDK with a fresh HERMES_HOME.\n"
         "Only after that review, update EXPECTED in scripts/check-hermes-compatibility.py using sha256sum.\n"
         "Do not refresh the fingerprints merely to bypass this failure."
